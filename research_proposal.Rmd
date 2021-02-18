@@ -1,0 +1,12 @@
+---
+title: "**Text Classification Using R  \nWhat makes a good post on StackOverflow?**"
+author: "Julian Aviles"
+output: pdf_document
+---
+<!-- date: '`r format(Sys.Date(), "%m/%d/%Y")`' -->
+
+## 1. Introduction
+|     Text classification, also known as text tagging, is the process of categorizing text into predefined groups. This area of text mining is significant in many real-world applications. Some tasks, sucqh as manually labeling thousands of documents, are labor intensive and require specialized training. Using text classification techniques, we can eliminate some of these costs, while at the same time often reducing the error rate. Prior research has been done in this area, for example <enter-here>. Another interesting application is <enter-here>.
+
+## 2. Method
+|     This project will focus on using machine learning techniques to classify user-submitted post on the website StackOverflow.com. The posts are classified into three different types of posts, each with 15,000 observations. One group is high quality posts with a total of 30+ score and without a single edit. Next is low quality posts with a negative score, and multiple community edits, but still remaining open after those changes. Last we have low quality posts that were closed by the community without a single edit.
