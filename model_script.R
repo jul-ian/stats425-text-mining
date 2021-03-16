@@ -84,12 +84,12 @@ posts_dtm <- cast_dtm(posts_tidy, line, word, n)
 #   mutate(line = row_number()) %>% 
 #   cast_dtm(line, word, n)
 
-posts_sparse <- removeSparseTerms(posts_dtm, 0.997)
+posts_sparse <- removeSparseTerms(posts_dtm, 0.99)
 posts_df <- as_tibble(as.matrix(posts_sparse))
 
 posts_df <- as_tibble(as.matrix(posts_sparse)) %>%
   rename_all(~ {make.names(.x)})
-posts_df$post_rating <- posts$rating
+posts_df$post_rating <- as.factor(posts$rating)
 
 split <- sample.split(posts_df$post_rating, SplitRatio = 0.7)
 
