@@ -1,15 +1,15 @@
 ## First approach using random forest
 
 library(readr)
-library(dplyr)
 library(tm)
+library(dplyr)
 library(SnowballC)
 library(randomForest)
 library(caTools)
 library(class)
 library(tidytext)
 library(ggplot2)
-library(wordcloud)
+library(wordcloud2)
 
 tag_extract <- function(tag) {
   tag %>% 
@@ -82,7 +82,7 @@ posts_freqs %>%
   group_by(rating) %>% 
   top_n(15) %>% 
   ungroup() %>% 
-  filter(rating == "HQ") %>% 
+  dplyr::filter(rating == "HQ") %>% 
   select(word, n_total) %>% 
   arrange(desc(n_total)) %>% 
   wordcloud2(., color="random-dark")
@@ -91,32 +91,13 @@ posts_freqs %>%
   group_by(rating) %>% 
   top_n(15) %>% 
   ungroup() %>% 
-  filter(rating == "LQ") %>% 
+  dplyr::filter(rating == "LQ") %>% 
   select(word, n_total) %>% 
   arrange(desc(n_total)) %>% 
   wordcloud2(., color="random-dark")
 ##
 
 ## topic modelling ##
-posts_dtm <- cast_dtm(posts_tidy, line, word, n)
-#posts_sparse <- removeSparseTerms(posts_dtm, 0.99)
-
-lda_mod <- LDA(posts_dtm, k = 2, control = list(seed = 888))
-lda_topics <- tidy(lda_mod, matrix = "beta")
-
-posts_top_terms <- lda_topics %>%
-  group_by(topic) %>%
-  top_n(10, beta) %>%
-  ungroup() %>% 
-  arrange(topic, -beta)
-posts_top_terms %>%
-  mutate(term = reorder_within(term, beta, topic)) %>%
-  ggplot(aes(term, beta, fill = factor(topic))) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~ topic, scales = "free") +
-  coord_flip() +
-  scale_x_reordered()
-
 lda_mod <- LDA(posts_dtm, k = 2, control = list(seed = 888))
 lda_topics <- tidy(lda_mod, matrix = "beta")
 
@@ -134,9 +115,8 @@ posts_top_terms %>%
   scale_x_reordered()
 ##
 
-
-
-
+## Random Forest ## 
+### TAKES ABOUT 4 HOURS TO TRAIN
 posts_dtm <- cast_dtm(posts_tidy, line, word, n)
 posts_sparse <- removeSparseTerms(posts_dtm, 0.99)
 
@@ -159,6 +139,5 @@ table(posts_test$post_rating, preds)
 
 sum(posts_test$post_rating == preds)/length(posts_test$post_rating)
 
-# knnmod <- knn(train = posts_train[, colnames(posts_train) != "post_rating"], 
-#               test = posts_test[, colnames(posts_test) != "post_rating"], 
-#               cl = posts_train$post_rating, k = 1)
+#@
+
